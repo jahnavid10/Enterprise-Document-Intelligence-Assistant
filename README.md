@@ -3,6 +3,8 @@
 An end-to-end **Retrieval-Augmented Generation (RAG)** chatbot built using BBC News articles.
 The system retrieves relevant news article chunks using **FAISS semantic search** and generates grounded answers using a **Hugging Face language model**.
 
+🔗 **Live Demo:** [enterprise-document-intelligence-assistant-chatbot.streamlit.app](https://enterprise-document-intelligence-assistant-chatbot.streamlit.app/)
+
 ---
 
 ## Project Overview
@@ -65,7 +67,7 @@ Semantic Retrieval
         ↓
 RAG Answer Generation
         ↓
-Gradio Chatbot
+Chatbot Interface (Gradio / Streamlit)
 ```
 
 ---
@@ -352,8 +354,8 @@ enterprise-document-intelligence-rag/
 Clone the repository:
 
 ```bash
-git clone https://github.com/jahnavid10/enterprise-document-intelligence-rag.git
-cd enterprise-document-intelligence-rag
+git clone https://github.com/jahnavid10/Enterprise-Document-Intelligence-Assistant.git
+cd Enterprise-Document-Intelligence-Assistant
 ```
 
 Create and activate a virtual environment:
@@ -431,6 +433,8 @@ faiss-cpu
 ## Deployment
 
 ### Streamlit Community Cloud (recommended, free)
+
+🔗 **Live Demo:** [enterprise-document-intelligence-assistant-chatbot.streamlit.app](https://enterprise-document-intelligence-assistant-chatbot.streamlit.app/)
 
 1. Push this repository to GitHub (already done if you're reading this on GitHub).
 2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
