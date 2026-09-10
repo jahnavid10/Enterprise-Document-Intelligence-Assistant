@@ -12,17 +12,17 @@ class RAGPipeline:
         index_path="data/bbc_faiss_index.index",
         metadata_path="data/bbc_chunk_metadata.csv",
         embedding_model_name="sentence-transformers/all-MiniLM-L6-v2",
-        llm_model_name="google/flan-t5-base",
+        llm_model_name="google/flan-t5-small",
     ):
         self.index_path = index_path
         self.metadata_path = metadata_path
         self.embedding_model_name = embedding_model_name
         self.llm_model_name = llm_model_name
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
         self.index = self.load_faiss_index()
         self.metadata = self.load_metadata()
-        self.embedding_model = SentenceTransformer(self.embedding_model_name)
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.embedding_model = SentenceTransformer(self.embedding_model_name, device=self.device)
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.llm_model_name)
         self.llm_model = AutoModelForSeq2SeqLM.from_pretrained(self.llm_model_name)

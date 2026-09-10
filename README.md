@@ -25,7 +25,8 @@ This helps improve answer relevance, provide document-grounded responses, and re
 * FAISS vector database
 * Semantic search
 * LLM-based answer generation
-* Gradio chatbot interface
+* Gradio chatbot interface (local use / Colab)
+* Streamlit chatbot interface (cloud deployment)
 * Retrieved article titles shown with answers
 
 ---
@@ -40,6 +41,7 @@ This helps improve answer relevance, provide document-grounded responses, and re
 * Hugging Face Transformers
 * PyTorch
 * Gradio
+* Streamlit
 * Kaggle Notebooks
 
 ---
@@ -274,8 +276,9 @@ After completing the notebooks, the retrieval assets were moved into a Python ap
 
 The final chatbot uses:
 
-* `app.py` for the Gradio interface
-* `rag_pipeline.py` for retrieval and answer generation
+* `app.py` for the Gradio interface (local use / Google Colab)
+* `streamlit_app.py` for the Streamlit interface (cloud deployment)
+* `rag_pipeline.py` for retrieval and answer generation, shared by both interfaces
 * `bbc_faiss_index.index` as the FAISS vector database
 * `bbc_chunk_metadata.csv` as the chunk metadata file
 
@@ -294,10 +297,12 @@ This model converts document chunks and user queries into dense vector embedding
 ### Language Model
 
 ```text
-google/flan-t5-base
+google/flan-t5-small
 ```
 
-This model generates answers using the retrieved document context.
+This model generates answers using the retrieved document context. It was chosen over the larger
+`flan-t5-base` to keep the app's memory footprint under the 1GB RAM limit of free cloud hosting
+tiers such as Streamlit Community Cloud.
 
 ---
 
@@ -307,6 +312,7 @@ This model generates answers using the retrieved document context.
 enterprise-document-intelligence-rag/
 │
 ├── app.py
+├── streamlit_app.py
 ├── rag_pipeline.py
 ├── requirements.txt
 ├── README.md
@@ -324,7 +330,8 @@ enterprise-document-intelligence-rag/
     ├── 05_FAISS_Vector_Indexing.ipynb
     ├── 06_Retrieval_System.ipynb
     ├── 07_RAG_Pipeline.ipynb
-    └── 08_RAG_Evaluation.ipynb
+    ├── 08_RAG_Evaluation.ipynb
+    └── run_on_colab.ipynb
 ```
 
 ---
@@ -377,6 +384,8 @@ pip install -r requirements.txt
 
 ## Run the Chatbot Locally
 
+Gradio interface:
+
 ```bash
 python app.py
 ```
@@ -387,35 +396,62 @@ Open the Gradio link shown in the terminal:
 http://127.0.0.1:7860
 ```
 
+Streamlit interface:
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Open the Streamlit link shown in the terminal:
+
+```text
+http://localhost:8501
+```
+
 ---
 
 ## Requirements
 
 ```text
+streamlit
 gradio
+torch
+transformers
+accelerate
+sentence-transformers
+sentencepiece
+safetensors
 pandas
 numpy
 faiss-cpu
-sentence-transformers
-transformers
-torch
-accelerate
 ```
 
 ---
 
 ## Deployment
 
-The chatbot can be deployed on **Hugging Face Spaces** using Gradio.
+### Streamlit Community Cloud (recommended, free)
 
-🔗 **Live Demo:** [Enterprise Document Intelligence Assistant](https://huggingface.co/spaces/dulalajahnavi10/enterprise-document-intelligence-rag)
+1. Push this repository to GitHub (already done if you're reading this on GitHub).
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+3. Click **New app**, select this repo/branch, and set the main file path to `streamlit_app.py`.
+4. Deploy — Streamlit Cloud installs `requirements.txt` and gives you a permanent `*.streamlit.app` URL.
 
-Required files for deployment:
+The app uses `google/flan-t5-small` specifically to fit inside Streamlit Community Cloud's 1GB
+free-tier RAM limit alongside the embedding model and PyTorch.
+
+### Google Colab (temporary public link)
+
+`notebooks/run_on_colab.ipynb` runs the Gradio interface (`app.py`) on Colab's free CPU/GPU and
+exposes it via a temporary `*.gradio.live` public link. Useful for on-demand demos, but the link
+only stays up while the notebook is running.
+
+Required files for either deployment path:
 ```text
-app.py
+app.py            (Gradio / Colab)
+streamlit_app.py  (Streamlit Cloud)
 rag_pipeline.py
 requirements.txt
-README.md
 data/bbc_faiss_index.index
 data/bbc_chunk_metadata.csv
 ```
@@ -441,7 +477,7 @@ Evaluation included:
 * The chatbot answers only from the stored BBC News dataset.
 * It does not provide live or real-time news.
 * Answer quality depends on the retrieved chunks.
-* `google/flan-t5-base` is lightweight, so answers may be shorter than larger LLM outputs.
+* `google/flan-t5-small` is lightweight, so answers may be shorter than larger LLM outputs.
 * The dataset may not contain all topics or recent events.
 
 ---

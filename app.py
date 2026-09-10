@@ -41,4 +41,10 @@ demo = gr.ChatInterface(
 
 
 if __name__ == "__main__":
-    demo.launch()
+    try:
+        import google.colab  # noqa: F401
+        running_in_colab = True
+    except ImportError:
+        running_in_colab = False
+
+    demo.launch(share=running_in_colab)

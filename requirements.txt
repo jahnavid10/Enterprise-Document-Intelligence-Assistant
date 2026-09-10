@@ -1,8 +1,12 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+streamlit
 gradio
+torch
+transformers>=4.46
+accelerate>=0.30
+sentence-transformers>=3.0
+sentencepiece
+safetensors
 pandas
 numpy
 faiss-cpu
-sentence-transformers
-transformers
-torch
-accelerate
